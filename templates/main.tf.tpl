@@ -4,10 +4,6 @@ terraform {
       source  = "hashicorp/helm"
       version = "2.5.1"
     }
-    kubectl = {
-      source  = "gavinbunney/kubectl"
-      version = "1.14.0"
-    }
     kind = {
       source  = "tehcyx/kind"
       version = "0.0.12"
@@ -49,13 +45,6 @@ module "caddy" {
       host                   = module.{{ $cluster }}_cluster.credentials.endpoint
     }
   }
-  provider "kubectl" {
-    alias = "{{ $cluster }}"
-    client_certificate     = module.{{ $cluster }}_cluster.credentials.client_certificate
-    client_key             = module.{{ $cluster }}_cluster.credentials.client_key
-    cluster_ca_certificate = module.{{ $cluster }}_cluster.credentials.cluster_ca_certificate
-    host                   = module.{{ $cluster }}_cluster.credentials.endpoint
-  }
   provider "kubernetes" {
     alias = "{{ $cluster }}"
     client_certificate     = module.{{ $cluster }}_cluster.credentials.client_certificate
@@ -69,7 +58,6 @@ module "caddy" {
     domain = "{{ $cluster }}.localhost"
     providers = {
       helm = helm.{{ $cluster }}
-      kubectl = kubectl.{{ $cluster }}
       kubernetes = kubernetes.{{ $cluster }}
     }
   }
