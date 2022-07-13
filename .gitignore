@@ -1,0 +1,7 @@
+.generated
+.terraform
+.idea
+*.tfstate*
+*.tfvars
+clusters.yml
+stack
