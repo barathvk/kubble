@@ -1,6 +1,6 @@
 //noinspection HILUnresolvedReference
 locals {
-  certs_path = "${path.root}/.generated/certs"
+  certs_path = "${path.root}/certs"
   domains = join(" ", [for sub in var.clusters : "${sub.name}.localhost"])
   subdomains = join(" ", [for sub in var.clusters : "*.${sub.name}.localhost"])
 }

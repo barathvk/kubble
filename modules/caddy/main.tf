@@ -1,16 +1,8 @@
-resource "local_file" "caddyfile" {
-  filename = abspath("${path.root}/.generated/Caddyfile")
-  content = templatefile("${path.module}/templates/caddyfile.tftpl", {clusters = var.clusters})
-}
-resource "local_file" "index_html" {
-  filename = abspath("${path.root}/.generated/html/index.html")
-  content = templatefile("${path.module}/templates/index.html", {})
-}
 resource "docker_image" "caddy" {
   name = "caddy:latest"
 }
 resource "docker_container" "caddy" {
-  depends_on = [local_file.caddyfile, null_resource.certs]
+  depends_on = [null_resource.certs]
   image = docker_image.caddy.latest
   name  = "caddy"
   ports {
@@ -31,17 +23,17 @@ resource "docker_container" "caddy" {
   }
   volumes {
     container_path = "/etc/caddy/Caddyfile"
-    host_path      = abspath("${path.root}/.generated/Caddyfile")
+    host_path      = abspath("${path.root}/Caddyfile")
     read_only      = true
   }
   volumes {
     container_path = "/root/.caddy"
-    host_path      = abspath("${path.root}/.generated/certs")
+    host_path      = abspath("${path.root}/certs")
     read_only      = true
   }
   volumes {
     container_path = "/root/html"
-    host_path      = abspath("${path.root}/.generated/html")
+    host_path      = abspath("${path.root}/html")
     read_only      = true
   }
 }

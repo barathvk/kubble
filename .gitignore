@@ -4,4 +4,4 @@
 *.tfstate*
 *.tfvars
 clusters.yml
-stack
+.stack

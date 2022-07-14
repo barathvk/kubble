@@ -1,21 +1,21 @@
-%{ for cluster in clusters ~}
-${cluster.name}.localhost {
-  reverse_proxy http://host.docker.internal:${cluster.port}
+{{ range $ix, $cluster := .clusters }}
+{{ $cluster }}.localhost {
+  reverse_proxy http://host.docker.internal:{{ add $.base_port $ix 1 }}
   encode gzip
   tls /root/.caddy/tls.crt /root/.caddy/tls.key
   log {
     level INFO
   }
 }
-*.${cluster.name}.localhost {
-  reverse_proxy http://host.docker.internal:${cluster.port}
+*.{{ $cluster }}.localhost {
+  reverse_proxy http://host.docker.internal:{{ add $.base_port $ix 1 }}
   encode gzip
   tls /root/.caddy/tls.crt /root/.caddy/tls.key
   log {
     level INFO
   }
 }
-%{ endfor ~}
+{{ end }}
 
 :443 {
   root * /root/html
